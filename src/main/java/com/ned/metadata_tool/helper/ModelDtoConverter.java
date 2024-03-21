@@ -1,11 +1,9 @@
 package com.ned.metadata_tool.helper;
 
-import com.ned.metadata_tool.dto.BusinessDomainEntityDto;
-import com.ned.metadata_tool.dto.DBConfigDto;
-import com.ned.metadata_tool.dto.MetadataColumnDto;
-import com.ned.metadata_tool.dto.MetadataTableDto;
+import com.ned.metadata_tool.dto.*;
 import com.ned.metadata_tool.enums.Flag;
 import com.ned.metadata_tool.model.*;
+import org.apache.catalina.User;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -125,6 +123,32 @@ public enum ModelDtoConverter implements Converter {
             BusinessDomainEntityDto businessDomainEntitiesDto = (BusinessDomainEntityDto) dto;
             BusinessDomainEntity businessDomainEntity = super.dtoToModel(dto, clazz);
             return (U) businessDomainEntity;
+        }
+
+        @Override
+        public <T, U> U dtoToResponse(T dto, Class clazz) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+            return super.dtoToResponse(dto, clazz);
+        }
+    },
+
+    USER_ACCOUNT{
+        @Override
+        public <T, U> U requestToDto(T req, Class clazz) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+            return super.requestToDto(req, clazz);
+        }
+
+        @Override
+        public <T, U> U modelToDto(T model, Class clazz) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+            UserAccount userAccount = (UserAccount) model;
+            UserAccountDto dto = super.modelToDto(userAccount, clazz);
+            return (U) dto;
+        }
+
+        @Override
+        public <T, U> U dtoToModel(T dto, Class clazz) throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException {
+            UserAccountDto userAccountDto = (UserAccountDto) dto;
+            UserAccount userAccount = super.dtoToModel(userAccountDto, clazz);
+            return (U) userAccount;
         }
 
         @Override
