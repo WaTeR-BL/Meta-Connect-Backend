@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 public class UserAccountController implements BaseRestMapper {
     @Autowired
     UserAccountService userAccountService;
+
     @PostMapping("registration")
     ResponseEntity<UserAccountDto> register(@RequestBody UserAccountDto dto) {
         UserAccountDto created ;
@@ -34,7 +35,7 @@ public class UserAccountController implements BaseRestMapper {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<>(status, HttpStatus.CREATED);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
 }
