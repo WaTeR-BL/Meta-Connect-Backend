@@ -2,16 +2,19 @@ package com.ned.metadata_tool.service.impl;
 
 import com.ned.metadata_tool.dto.UserAccountDto;
 import com.ned.metadata_tool.helper.ModelDtoConverter;
-import com.ned.metadata_tool.model.DBConfig;
 import com.ned.metadata_tool.model.UserAccount;
 import com.ned.metadata_tool.model.UserId;
 import com.ned.metadata_tool.repo.UserAccountRepository;
 import com.ned.metadata_tool.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
@@ -34,4 +37,17 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         return Boolean.FALSE;
     }
+
+    @Override
+    public Page<UserAccountDto> find(Pageable pageable) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
+        Page<UserAccount> user = userAccountRepository.findAll(pageable);
+        List<UserAccountDto> dtos = new ArrayList<>();
+        for (UserAccount userAccount : user){
+            UserAccountDto o =ModelDtoConverter.USER_ACCOUNT.modelToDto(userAccount,UserAccountDto.class);
+            dtos.add(o);
+        }
+        return new PageImpl<>(dtos, pageable, user.getTotalElements());
+    }
+
+
 }

@@ -10,5 +10,4 @@ import java.util.List;
 
 public interface DBConfigRepository extends JpaRepository<DBConfig, Long> {
     Page<DBConfig> findAllByFlag(Pageable pageable, Flag flag);
-    List<DBConfig> findAllByFlag(Flag flag);
 }
