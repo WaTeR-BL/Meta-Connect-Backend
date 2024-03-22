@@ -3,7 +3,11 @@ package com.ned.metadata_tool.controller;
 
 import com.ned.metadata_tool.common.BaseRestMapper;
 import com.ned.metadata_tool.dto.BusinessDomainEntityDto;
+import com.ned.metadata_tool.dto.DBConfigDto;
+import com.ned.metadata_tool.enums.Flag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +54,7 @@ public class BusinessDomainEntityController implements BaseRestMapper {
         }
     }
 
-    @PostMapping("business-domain-entity/{businessDomainId}")
+    @PostMapping("business-domain-entity")
     ResponseEntity<BusinessDomainEntityDto> create(@PathVariable Long businessDomainId, @RequestBody BusinessDomainEntityDto dto) {
         BusinessDomainEntityDto created;
         try {
@@ -60,6 +64,18 @@ public class BusinessDomainEntityController implements BaseRestMapper {
             throw new RuntimeException(e);
         }
         return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
+    @GetMapping("business-domains")
+    ResponseEntity<Page<BusinessDomainEntityDto>> find(Pageable pageable){
+        Page<BusinessDomainEntityDto> dtos;
+        try {
+            dtos = businessDomainEntityService.find(pageable, Flag.ACTIVE);
+        } catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException |
+                 InstantiationException e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
     }
 
 }

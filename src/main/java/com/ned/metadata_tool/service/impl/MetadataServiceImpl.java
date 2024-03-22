@@ -108,7 +108,6 @@ public class MetadataServiceImpl implements MetadataService {
                         if (!(savedColumnsMap.containsKey(columnId))) {
                             dbMetadataColumn.setDbMetadataTable(savedTablesMap.get(dbMetadataColumn.getObjectId()));
                             dbMetadataColumns.add(dbMetadataColumn);
-                            savedColumnsMap.put(columnId, dbMetadataColumn);
                         }
                     }
                     savedDBMetadataTable.setColumnList(dbMetadataColumns);
@@ -118,7 +117,6 @@ public class MetadataServiceImpl implements MetadataService {
                     if (!(savedTablesMap.containsKey(dbMetadataTableSnapshot.getObjectId()))) {
                         dbMetadataTableSnapshot.setDbConfig(dbConfig);
                         dbMetadataTables.add(dbMetadataTableSnapshot);
-                        savedTablesMap.put(dbMetadataTableSnapshot.getObjectId(), dbMetadataTableSnapshot);
                     }
                 }
 
