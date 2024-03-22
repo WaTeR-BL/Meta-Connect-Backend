@@ -55,7 +55,7 @@ public class BusinessDomainEntityController implements BaseRestMapper {
     }
 
     @PostMapping("business-domain-entity")
-    ResponseEntity<BusinessDomainEntityDto> create(@PathVariable Long businessDomainId, @RequestBody BusinessDomainEntityDto dto) {
+    ResponseEntity<BusinessDomainEntityDto> create(@RequestBody BusinessDomainEntityDto dto) {
         BusinessDomainEntityDto created;
         try {
             created = businessDomainEntityService.add(dto);
@@ -66,7 +66,7 @@ public class BusinessDomainEntityController implements BaseRestMapper {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping("business-domains")
+    @GetMapping("business-domain-entities")
     ResponseEntity<Page<BusinessDomainEntityDto>> find(Pageable pageable){
         Page<BusinessDomainEntityDto> dtos;
         try {
