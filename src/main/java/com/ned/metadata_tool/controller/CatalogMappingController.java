@@ -25,8 +25,8 @@ public class CatalogMappingController implements BaseRestMapper {
         }
     }
 
-    @DeleteMapping("delete/{columnId}/catalog-mapping-column")
-    ResponseEntity<String> DeleteColumnEntityMap(@PathVariable Long columnId, @RequestBody Long businessDomainEntityId) {
+    @DeleteMapping("delete/{columnId}/catalog-mapping-column/{businessDomainEntityId}")
+    ResponseEntity<String> DeleteColumnEntityMap(@PathVariable Long columnId, @PathVariable Long businessDomainEntityId) {
         try {
             catalogMappingService.deleteColumnMapping(columnId, businessDomainEntityId);
             return new ResponseEntity<>( "Deleted successfully", HttpStatus.OK);
