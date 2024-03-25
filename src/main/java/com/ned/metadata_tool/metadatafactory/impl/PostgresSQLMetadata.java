@@ -1,30 +1,26 @@
 package com.ned.metadata_tool.metadatafactory.impl;
 
+
 import com.ned.metadata_tool.metadatafactory.Metadata;
 import com.ned.metadata_tool.model.DBConfig;
 import com.ned.metadata_tool.model.MetadataColumn;
 import com.ned.metadata_tool.model.MetadataTable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-@Component
-public class SQLServerMetadata implements Metadata {
-
+public class PostgresSQLMetadata implements Metadata {
     @Override
     public List<MetadataTable> extractMetadata(DBConfig dbConfig) throws SQLException {
-        MetadataTable dbMetadataTable = null;
-        Connection con = null;
         List<MetadataTable> dbMetadataTables = null;
+        Connection con = null;
+        MetadataTable dbMetadataTable = null;
         try {
-            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
-            con = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUsername(), dbConfig.getPassword());
+            Class.forName("org.postgresql.Driver");
+            String url = dbConfig.getUrl() + dbConfig.getCatalogName() + "?currentSchema=" + dbConfig.getSchemaName();
+            con = DriverManager.getConnection(url, dbConfig.getUsername(), dbConfig.getPassword());
+
             DatabaseMetaData metaData = con.getMetaData();
 
             ResultSet tables = metaData.getTables(dbConfig.getCatalogName(), dbConfig.getSchemaName(), null, new String[]{"TABLE"});
@@ -32,21 +28,20 @@ public class SQLServerMetadata implements Metadata {
             while (tables.next()) {
                 dbMetadataTable = new MetadataTable();
                 String tableName = tables.getString("TABLE_NAME");
-                String sql = "SELECT OBJECT_ID(?) AS 'Object Id'";
+                String sql = "SELECT oid FROM pg_class WHERE relname = ?";
                 try (PreparedStatement statement = con.prepareStatement(sql)) {
-                    statement.setString(1, dbConfig.getCatalogName() + "." + dbConfig.getSchemaName() + "." + tableName);
+                    statement.setString(1, tableName);
                     ResultSet resultSet = statement.executeQuery();
                     while (resultSet.next()) {
-                        dbMetadataTable.setObjectId(resultSet.getInt("Object Id"));
+                        dbMetadataTable.setObjectId(resultSet.getInt("oid"));
                     }
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-
                 dbMetadataTable.setTableName(tableName);
                 dbMetadataTable.setTableType(tables.getString("TABLE_TYPE"));
-                dbMetadataTable.setSchemaName(tables.getString("TABLE_SCHEM"));
-                dbMetadataTable.setTableCatalog(tables.getString("TABLE_CAT"));
+                dbMetadataTable.setSchemaName(dbConfig.getSchemaName());
+                dbMetadataTable.setTableCatalog(dbConfig.getCatalogName());
                 dbMetadataTable.setDeletedFromSourceDB(Boolean.FALSE);
 
                 List<MetadataColumn> columnList = extractColumnMetadata(dbConfig, metaData, tableName);
@@ -61,7 +56,7 @@ public class SQLServerMetadata implements Metadata {
             tables.close();
 
 
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         } finally {
             if (con != null) {
@@ -93,7 +88,6 @@ public class SQLServerMetadata implements Metadata {
         columns.close();
         return columnList;
     }
-
 
 
 }

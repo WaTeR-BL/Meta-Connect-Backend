@@ -1,15 +1,15 @@
 package com.ned.metadata_tool.metadatafactory;
 
 import com.ned.metadata_tool.metadatafactory.impl.MySQLMetadata;
-import com.ned.metadata_tool.metadatafactory.impl.SQLServerMetadata;
+import com.ned.metadata_tool.metadatafactory.impl.PostgresSQLMetadata;
 import com.ned.metadata_tool.model.DBConfig;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseMetadataFactory {
     public Metadata createDatabaseMetadata(DBConfig dbConfig) {
-        if ("sqlserver".equalsIgnoreCase(dbConfig.getType())) {
-            return new SQLServerMetadata();
+        if ("postgres".equalsIgnoreCase(dbConfig.getType())) {
+            return new PostgresSQLMetadata();
         } else if ("mysql".equalsIgnoreCase(dbConfig.getType())) {
             return new MySQLMetadata();
         }
