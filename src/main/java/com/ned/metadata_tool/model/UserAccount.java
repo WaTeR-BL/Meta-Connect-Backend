@@ -6,17 +6,27 @@ import javax.persistence.Entity;
 public class UserAccount extends BaseEntity{
     private String firstName;
     private String lastName;
+    private String email;
     private String password;
     private String userName;
 
-    public UserAccount(String userName, String firstName, String lastName, String password) {
+    public UserAccount(String email,String userName, String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
         this.userName=userName;
+        this.email = email;
     }
 
     public UserAccount() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getUserName() {

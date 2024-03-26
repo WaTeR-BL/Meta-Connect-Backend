@@ -2,6 +2,7 @@ package com.ned.metadata_tool.controller;
 
 import com.ned.metadata_tool.common.BaseRestMapper;
 import com.ned.metadata_tool.dto.UserAccountDto;
+import com.ned.metadata_tool.model.AuthRequest;
 import com.ned.metadata_tool.service.UserAccountService;
 import com.ned.metadata_tool.util.JwtUtil;
 import org.apache.catalina.LifecycleState;
@@ -41,15 +42,15 @@ public class UserAccountController implements BaseRestMapper {
     }
 
     @PostMapping("/authenticate")
-    public String generateToken(@RequestBody UserAccountDto dto) throws Exception {
+    public String generateToken(@RequestBody AuthRequest authRequest) throws Exception {
         try {
             authenticate.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getUserName(), dto.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequest.getUserName(), authRequest.getPassword())
             );
         } catch (Exception ex) {
             throw new Exception("invalid username/password");
         }
-        return jwtUtil.generateToken(dto.getUserName());
+        return jwtUtil.generateToken(authRequest.getUserName());
     }
 
 
