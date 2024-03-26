@@ -1,32 +1,30 @@
 package com.ned.metadata_tool.model;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
-public class UserAccount {
-    @EmbeddedId
-    private UserId userId;
+public class UserAccount extends BaseEntity{
     private String firstName;
     private String lastName;
     private String password;
+    private String userName;
 
-    public UserAccount(UserId userId, String firstName, String lastName, String password) {
-        this.userId = userId;
+    public UserAccount(String userName, String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.userName=userName;
     }
 
     public UserAccount() {
     }
 
-    public UserId getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(UserId userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFirstName() {

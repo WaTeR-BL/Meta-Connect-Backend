@@ -1,36 +1,18 @@
 package com.ned.metadata_tool.dto;
 
-import com.ned.metadata_tool.model.UserId;
-
-public class UserAccountDto {
-    private UserId userId;
-    private String firstName;
-    private String lastName;
+public class UserAccountDto extends BaseDto{
+    private String userName;
     private String password;
 
-    public UserId getUserId() {
-        return userId;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(UserId userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public String getPassword() {
         return password;

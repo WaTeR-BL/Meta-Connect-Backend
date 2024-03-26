@@ -3,7 +3,6 @@ package com.ned.metadata_tool.service.impl;
 import com.ned.metadata_tool.dto.UserAccountDto;
 import com.ned.metadata_tool.helper.ModelDtoConverter;
 import com.ned.metadata_tool.model.UserAccount;
-import com.ned.metadata_tool.model.UserId;
 import com.ned.metadata_tool.repo.UserAccountRepository;
 import com.ned.metadata_tool.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +28,6 @@ public class UserAccountServiceImpl implements UserAccountService {
         return dto;
     }
 
-    @Override
-    public Boolean login(String email, String username, String password) {
-        UserAccount userAccount = userAccountRepository.findByUserIdAndPassword(new UserId(username, email),password);
-        if (userAccount != null) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-    }
 
     @Override
     public Page<UserAccountDto> find(Pageable pageable) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException, InstantiationException {
@@ -48,6 +39,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         return new PageImpl<>(dtos, pageable, user.getTotalElements());
     }
+
 
 
 }

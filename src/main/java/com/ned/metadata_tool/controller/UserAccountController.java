@@ -3,12 +3,15 @@ package com.ned.metadata_tool.controller;
 import com.ned.metadata_tool.common.BaseRestMapper;
 import com.ned.metadata_tool.dto.UserAccountDto;
 import com.ned.metadata_tool.service.UserAccountService;
+import com.ned.metadata_tool.util.JwtUtil;
 import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +21,12 @@ import java.util.List;
 public class UserAccountController implements BaseRestMapper {
     @Autowired
     UserAccountService userAccountService;
+
+    @Autowired
+    AuthenticationManager authenticate;
+
+    @Autowired
+    JwtUtil jwtUtil;
 
     @PostMapping("registration")
     ResponseEntity<UserAccountDto> register(@RequestBody UserAccountDto dto) {
@@ -31,16 +40,18 @@ public class UserAccountController implements BaseRestMapper {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping("login")
-    ResponseEntity<Boolean> authenticate(@RequestParam String username, @RequestParam String email, @RequestParam String password) {
-        Boolean status;
+    @PostMapping("/authenticate")
+    public String generateToken(@RequestBody UserAccountDto dto) throws Exception {
         try {
-            status = userAccountService.login(email, username, password);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+            authenticate.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getUserName(), dto.getPassword())
+            );
+        } catch (Exception ex) {
+            throw new Exception("invalid username/password");
         }
-        return new ResponseEntity<>(status, HttpStatus.OK);
+        return jwtUtil.generateToken(dto.getUserName());
     }
+
 
     @GetMapping("users")
     ResponseEntity<Page<UserAccountDto>> findAll(Pageable pageable) {
